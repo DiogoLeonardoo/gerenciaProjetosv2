@@ -1,0 +1,9 @@
+export enum StatusCompromisso {
+  PENDENTE = 'PENDENTE',
+
+  EM_ANDAMENTO = 'EM_ANDAMENTO',
+
+  CONCLUIDO = 'CONCLUIDO',
+
+  CANCELADO = 'CANCELADO',
+}

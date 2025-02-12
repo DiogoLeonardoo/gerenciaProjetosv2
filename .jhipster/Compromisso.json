@@ -1,0 +1,56 @@
+{
+  "annotations": {
+    "changelogDate": "20250207013527"
+  },
+  "applications": "*",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "titulo",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "descricao",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "dataHorario",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "classificacao",
+      "fieldType": "CompromissoClassificacao",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "TRABALHO,ESTUDO,PESSOAL"
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "StatusCompromisso",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "PENDENTE,EM_ANDAMENTO,CONCLUIDO,CANCELADO"
+    }
+  ],
+  "name": "Compromisso",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityName": "etapa",
+      "otherEntityRelationshipName": "compromisso",
+      "relationshipName": "etapa",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "user",
+      "relationshipName": "usuario",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipWithBuiltInEntity": true
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

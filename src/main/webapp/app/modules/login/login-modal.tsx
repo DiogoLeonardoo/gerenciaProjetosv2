@@ -72,14 +72,6 @@ const LoginModal = (props: ILoginModalProps) => {
             </Col>
           </Row>
           <div className="mt-1">&nbsp;</div>
-          <Alert color="warning">
-            <Link to="/account/reset/request" data-cy="forgetYourPasswordSelector">
-              Esqueceu sua senha?
-            </Link>
-          </Alert>
-          <Alert color="warning">
-            <span>Não possui uma conta ainda?</span> <Link to="/account/register">Crie uma nova conta</Link>
-          </Alert>
         </ModalBody>
         <ModalFooter>
           <Button color="secondary" onClick={handleClose} tabIndex={1}>

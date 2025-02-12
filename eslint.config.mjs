@@ -1,7 +1,6 @@
 // @ts-check
 
 import globals from 'globals';
-import prettier from 'eslint-plugin-prettier/recommended';
 import tseslint from 'typescript-eslint';
 import eslint from '@eslint/js';
 import react from 'eslint-plugin-react/configs/recommended.js';
@@ -94,5 +93,4 @@ export default tseslint.config(
     },
   },
   // jhipster-needle-eslint-add-config - JHipster will add additional config here
-  prettier,
 );

@@ -1,0 +1,31 @@
+{
+  "annotations": {
+    "changelogDate": "20250207013529"
+  },
+  "applications": "*",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "titulo",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "prazo",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "name": "Notificacao",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityName": "compromisso",
+      "relationshipName": "compromisso",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

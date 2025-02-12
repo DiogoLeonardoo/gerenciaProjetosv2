@@ -55,7 +55,7 @@ relationship ManyToOne {
 
 // Relacionamento entre Notificacao e Compromisso
 relationship ManyToOne {
-  Notificacao to Compromisso{notificacoes}
+  Notificacao{compromisso} to Compromisso{notificacoes}
 }
 
 // Paginação para compromissos e etapas

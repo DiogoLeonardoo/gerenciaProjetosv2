@@ -1,0 +1,69 @@
+// Definindo a entidade Compromisso
+entity Compromisso {
+  titulo String required,
+  descricao String required,
+  dataHorario Instant required,
+  classificacao CompromissoClassificacao required,
+  status StatusCompromisso required
+}
+
+// Definindo a entidade Etapa
+entity Etapa {
+  descricao String required,
+  status StatusEtapa required,
+  ordem Integer required
+}
+
+// Definindo a entidade Notificacao
+entity Notificacao {
+  titulo String required,
+  prazo Instant required, // Data de prazo
+}
+
+// Enum para a classificação do compromisso
+enum CompromissoClassificacao {
+  TRABALHO,
+  ESTUDO,
+  PESSOAL
+}
+
+// Enum para o status do compromisso
+enum StatusCompromisso {
+  PENDENTE,
+  EM_ANDAMENTO,
+  CONCLUIDO,
+  CANCELADO
+}
+
+// Enum para o status das etapas
+enum StatusEtapa {
+  PENDENTE,
+  CONCLUIDA,
+  CANCELADA
+}
+
+// Relacionamento entre Compromisso e Etapa
+relationship OneToMany {
+  Compromisso to Etapa{compromisso}
+}
+
+// Relacionamento entre Compromisso e User (usuário autenticado)
+relationship ManyToOne {
+  Compromisso{usuario} to User
+}
+
+// Relacionamento entre Notificacao e Compromisso
+relationship ManyToOne {
+  Notificacao{compromisso} to Compromisso
+}
+
+// Paginação para compromissos e etapas
+paginate Compromisso with pagination
+paginate Etapa with infinite-scroll
+paginate Notificacao with pagination
+
+// Serviço para todas as entidades
+service all with serviceImpl except RelatorioDesempenho
+
+// DTOs para todas as entidades
+dto * with mapstruct except RelatorioDesempenho
