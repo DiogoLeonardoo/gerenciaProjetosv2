@@ -120,17 +120,18 @@ export const Notificacao = () => {
             <thead>
               <tr>
                 <th className="hand" onClick={sort('id')}>
-                  ID <FontAwesomeIcon icon={getSortIconByFieldName('id')} />
+                  ID
                 </th>
                 <th className="hand" onClick={sort('titulo')}>
-                  Titulo <FontAwesomeIcon icon={getSortIconByFieldName('titulo')} />
+                  Titulo
                 </th>
                 <th className="hand" onClick={sort('prazo')}>
-                  Prazo <FontAwesomeIcon icon={getSortIconByFieldName('prazo')} />
+                  Prazo
                 </th>
-                <th>
-                  Compromisso <FontAwesomeIcon icon="sort" />
+                <th className="hand" onClick={sort('convidados')}>
+                  Convidados
                 </th>
+
                 <th />
               </tr>
             </thead>
@@ -144,18 +145,9 @@ export const Notificacao = () => {
                   </td>
                   <td>{notificacao.titulo}</td>
                   <td>{notificacao.prazo ? <TextFormat type="date" value={notificacao.prazo} format={APP_DATE_FORMAT} /> : null}</td>
-                  <td>
-                    {notificacao.compromisso ? (
-                      <Link to={`/compromisso/${notificacao.compromisso.id}`}>{notificacao.compromisso.id}</Link>
-                    ) : (
-                      ''
-                    )}
-                  </td>
+                  <td>{notificacao.convidados ? notificacao.convidados.join(' | ') : null}</td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">
-                      <Button tag={Link} to={`/notificacao/${notificacao.id}`} color="info" size="sm" data-cy="entityDetailsButton">
-                        <FontAwesomeIcon icon="eye" /> <span className="d-none d-md-inline">Visualizar</span>
-                      </Button>
                       <Button
                         tag={Link}
                         to={`/notificacao/${notificacao.id}/edit?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`}

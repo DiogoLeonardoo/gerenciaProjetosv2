@@ -1,5 +1,6 @@
 package com.mycompany.myapp.web.rest;
 
+import com.mycompany.myapp.domain.Notificacao; // Importação da classe Notificacao
 import com.mycompany.myapp.repository.NotificacaoRepository;
 import com.mycompany.myapp.service.NotificacaoService;
 import com.mycompany.myapp.service.dto.NotificacaoDTO;
@@ -55,15 +56,17 @@ public class NotificacaoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    public ResponseEntity<NotificacaoDTO> createNotificacao(@Valid @RequestBody NotificacaoDTO notificacaoDTO) throws URISyntaxException {
-        LOG.debug("REST request to save Notificacao : {}", notificacaoDTO);
-        if (notificacaoDTO.getId() != null) {
-            throw new BadRequestAlertException("A new notificacao cannot already have an ID", ENTITY_NAME, "idexists");
+    public ResponseEntity<Notificacao> createNotificacao(@RequestBody Notificacao notificacao) {
+        // Validação da notificação recebida (verificando se o título, prazo, etc., não são nulos)
+        if (notificacao.getTitulo() == null || notificacao.getPrazo() == null) {
+            return ResponseEntity.badRequest().build(); // Retorna erro 400 se algum campo obrigatório estiver faltando
         }
-        notificacaoDTO = notificacaoService.save(notificacaoDTO);
-        return ResponseEntity.created(new URI("/api/notificacaos/" + notificacaoDTO.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, notificacaoDTO.getId().toString()))
-            .body(notificacaoDTO);
+
+        // Persistindo a notificação no banco
+        Notificacao savedNotificacao = notificacaoRepository.save(notificacao);
+
+        // Retornando a notificação criada com status 201 Created
+        return ResponseEntity.created(URI.create("/api/notificacoes/" + savedNotificacao.getId())).body(savedNotificacao);
     }
 
     /**
@@ -77,26 +80,30 @@ public class NotificacaoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<NotificacaoDTO> updateNotificacao(
+    public ResponseEntity<Notificacao> updateNotificacao(
         @PathVariable(value = "id", required = false) final Long id,
-        @Valid @RequestBody NotificacaoDTO notificacaoDTO
+        @Valid @RequestBody Notificacao notificacao
     ) throws URISyntaxException {
-        LOG.debug("REST request to update Notificacao : {}, {}", id, notificacaoDTO);
-        if (notificacaoDTO.getId() == null) {
-            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
-        }
-        if (!Objects.equals(id, notificacaoDTO.getId())) {
-            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        LOG.debug("REST request to update Notificacao : {}, {}", id, notificacao);
+
+        // Validação da notificação recebida (verificando se o título, prazo, etc., não são nulos)
+        if (notificacao.getTitulo() == null || notificacao.getPrazo() == null) {
+            return ResponseEntity.badRequest().build(); // Retorna erro 400 se algum campo obrigatório estiver faltando
         }
 
+        // Verificando se a notificação com o ID fornecido existe
         if (!notificacaoRepository.existsById(id)) {
-            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+            return ResponseEntity.notFound().build(); // Retorna 404 se a notificação não for encontrada
         }
 
-        notificacaoDTO = notificacaoService.update(notificacaoDTO);
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, notificacaoDTO.getId().toString()))
-            .body(notificacaoDTO);
+        // Atribuindo o ID da notificação recebida ao ID da notificação a ser atualizada
+        notificacao.setId(id);
+
+        // Persistindo a notificação atualizada no banco
+        Notificacao updatedNotificacao = notificacaoRepository.save(notificacao);
+
+        // Retornando a notificação atualizada com status 200 OK
+        return ResponseEntity.ok().body(updatedNotificacao);
     }
 
     /**
@@ -156,10 +163,9 @@ public class NotificacaoResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the notificacaoDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<NotificacaoDTO> getNotificacao(@PathVariable("id") Long id) {
-        LOG.debug("REST request to get Notificacao : {}", id);
-        Optional<NotificacaoDTO> notificacaoDTO = notificacaoService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(notificacaoDTO);
+    public ResponseEntity<Notificacao> getNotificacaoComConvidados(@PathVariable Long id) {
+        Optional<Notificacao> notificacao = notificacaoRepository.findByIdWithConvidados(id);
+        return notificacao.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     /**

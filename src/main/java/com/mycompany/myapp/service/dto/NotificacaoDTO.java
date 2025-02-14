@@ -1,25 +1,16 @@
 package com.mycompany.myapp.service.dto;
 
-import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.Objects;
+import java.util.Set;
 
-/**
- * A DTO for the {@link com.mycompany.myapp.domain.Notificacao} entity.
- */
-@SuppressWarnings("common-java:DuplicatedBlocks")
 public class NotificacaoDTO implements Serializable {
 
     private Long id;
-
-    @NotNull
     private String titulo;
-
-    @NotNull
     private Instant prazo;
-
-    private CompromissoDTO compromisso;
+    private Set<String> convidados; // Aqui é onde os convidados entram
+    private Long compromisso;
 
     public Long getId() {
         return id;
@@ -45,43 +36,20 @@ public class NotificacaoDTO implements Serializable {
         this.prazo = prazo;
     }
 
-    public CompromissoDTO getCompromisso() {
+    public Set<String> getConvidados() {
+        return convidados;
+    }
+
+    public void setConvidados(Set<String> convidados) {
+        this.convidados = convidados;
+    }
+
+    public Long getCompromisso() {
         return compromisso;
     }
 
-    public void setCompromisso(CompromissoDTO compromisso) {
+    public void setCompromisso(Long compromisso) {
         this.compromisso = compromisso;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof NotificacaoDTO)) {
-            return false;
-        }
-
-        NotificacaoDTO notificacaoDTO = (NotificacaoDTO) o;
-        if (this.id == null) {
-            return false;
-        }
-        return Objects.equals(this.id, notificacaoDTO.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.id);
-    }
-
-    // prettier-ignore
-    @Override
-    public String toString() {
-        return "NotificacaoDTO{" +
-            "id=" + getId() +
-            ", titulo='" + getTitulo() + "'" +
-            ", prazo='" + getPrazo() + "'" +
-            ", compromisso=" + getCompromisso() +
-            "}";
-    }
+    // Outros métodos, como equals, hashCode, toString
 }

@@ -105,17 +105,6 @@ export const RegisterPage = () => {
             </Button>
           </ValidatedForm>
           <p>&nbsp;</p>
-          <Alert color="warning">
-            <span>Se deseja </span>
-            <Link to="/login" className="alert-link">
-              entrar
-            </Link>
-            <span>
-              , utilize as seguintes contas padrões:
-              <br />- Administrador (usuário=&quot;admin&quot; and senha=&quot;admin&quot;) <br />- Usuário (usuário=&quot;user&quot; e
-              senha=&quot;user&quot;).
-            </span>
-          </Alert>
         </Col>
       </Row>
     </div>

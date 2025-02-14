@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.Set;
 
 /**
  * A Notificacao.
@@ -29,6 +30,11 @@ public class Notificacao implements Serializable {
     @NotNull
     @Column(name = "prazo", nullable = false)
     private Instant prazo;
+
+    @ElementCollection
+    @CollectionTable(name = "notificacao_convidados", joinColumns = @JoinColumn(name = "notificacao_id"))
+    @Column(name = "convidado")
+    private Set<String> convidados;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = { "etapas", "usuario" }, allowSetters = true)
@@ -86,6 +92,15 @@ public class Notificacao implements Serializable {
     public Notificacao compromisso(Compromisso compromisso) {
         this.setCompromisso(compromisso);
         return this;
+    }
+
+    public Set<String> getConvidados() {
+        return convidados;
+    }
+
+    // Setter
+    public void setConvidados(Set<String> convidados) {
+        this.convidados = convidados;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
