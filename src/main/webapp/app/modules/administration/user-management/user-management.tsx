@@ -120,15 +120,6 @@ export const UserManagement = () => {
             </th>
             <th />
             <th>Perfis</th>
-            <th className="hand" onClick={sort('createdDate')}>
-              Criado em <FontAwesomeIcon icon={getSortIconByFieldName('createdDate')} />
-            </th>
-            <th className="hand" onClick={sort('lastModifiedBy')}>
-              Modificado por <FontAwesomeIcon icon={getSortIconByFieldName('lastModifiedBy')} />
-            </th>
-            <th id="modified-date-sort" className="hand" onClick={sort('lastModifiedDate')}>
-              Modificado em <FontAwesomeIcon icon={getSortIconByFieldName('lastModifiedDate')} />
-            </th>
             <th />
           </tr>
         </thead>
@@ -161,15 +152,6 @@ export const UserManagement = () => {
                       </div>
                     ))
                   : null}
-              </td>
-              <td>
-                {user.createdDate ? <TextFormat value={user.createdDate} type="date" format={APP_DATE_FORMAT} blankOnInvalid /> : null}
-              </td>
-              <td>{user.lastModifiedBy}</td>
-              <td>
-                {user.lastModifiedDate ? (
-                  <TextFormat value={user.lastModifiedDate} type="date" format={APP_DATE_FORMAT} blankOnInvalid />
-                ) : null}
               </td>
               <td className="text-end">
                 <div className="btn-group flex-btn-group-container">
