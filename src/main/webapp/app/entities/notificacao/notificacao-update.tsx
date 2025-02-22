@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntities as getCompromissos } from 'app/entities/compromisso/compromisso.reducer';
 import { createEntity, getEntity, reset, updateEntity } from './notificacao.reducer';
+import { getUsers } from 'app/modules/administration/user-management/user-management.reducer';
 
 export const NotificacaoUpdate = () => {
   const dispatch = useAppDispatch();
@@ -23,14 +24,13 @@ export const NotificacaoUpdate = () => {
   const updating = useAppSelector(state => state.notificacao.updating);
   const updateSuccess = useAppSelector(state => state.notificacao.updateSuccess);
 
-  const [convidados, setConvidados] = useState<string[]>([]); // estado para gerenciar os convidados
-  const [novoConvidado, setNovoConvidado] = useState<string>(''); // estado para o campo de novo convidado
+  const users = useAppSelector(state => state.userManagement.users); // Lista de usuários
+  const [convidados, setConvidados] = useState<string[]>([]);
 
   const handleClose = () => {
     navigate(`/notificacao${location.search}`);
   };
 
-  // Carrega os dados da notificação ao editar
   useEffect(() => {
     if (isNew) {
       dispatch(reset());
@@ -38,6 +38,13 @@ export const NotificacaoUpdate = () => {
       dispatch(getEntity(id));
     }
     dispatch(getCompromissos({}));
+
+    const queryParams = {
+      page: 1,
+      size: 100, // Quantidade de itens por página
+    };
+
+    dispatch(getUsers(queryParams)); // Fetch users com parâmetros para pegar todos
   }, []);
 
   useEffect(() => {
@@ -46,7 +53,6 @@ export const NotificacaoUpdate = () => {
     }
   }, [updateSuccess]);
 
-  // Preenche os convidados com os dados da notificação ao editar
   useEffect(() => {
     if (!isNew && notificacaoEntity?.convidados) {
       setConvidados(notificacaoEntity.convidados);
@@ -85,12 +91,10 @@ export const NotificacaoUpdate = () => {
           convidados: notificacaoEntity?.convidados || [], // Preenche com convidados existentes
         };
 
-  // Função para adicionar um novo convidado
-  const adicionarConvidado = () => {
-    if (novoConvidado && !convidados.includes(novoConvidado)) {
-      setConvidados([...convidados, novoConvidado]);
-      setNovoConvidado('');
-    }
+  // Função para adicionar um novo convidado (a partir de um select)
+  const adicionarConvidado = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedUsers = Array.from(e.target.selectedOptions, option => option.value);
+    setConvidados([...convidados, ...selectedUsers]);
   };
 
   // Função para remover um convidado
@@ -147,27 +151,32 @@ export const NotificacaoUpdate = () => {
                     ))
                   : null}
               </ValidatedField>
+              {/* Campo de Convidados com select */}
               <div className="form-group">
                 <label htmlFor="convidados">Convidados</label>
                 <div className="d-flex">
-                  <Input
-                    id="novoConvidado"
-                    name="novoConvidado"
-                    value={novoConvidado}
-                    onChange={e => setNovoConvidado(e.target.value)}
-                    placeholder="Adicione um convidado"
-                  />
-                  <Button color="primary" onClick={adicionarConvidado} disabled={!novoConvidado}>
-                    Adicionar
-                  </Button>
+                  <select
+                    id="convidados-select"
+                    multiple
+                    value={convidados}
+                    onChange={adicionarConvidado}
+                    size={5} // Exibe 5 opções no select ao mesmo tempo
+                    className="form-control"
+                  >
+                    {users?.map(user => (
+                      <option key={user.login} value={user.login}>
+                        {user.login} {/* Exiba o nome do usuário */}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
-              {/* Lista de convidados */}
+              {/* List of invited users */}
               {convidados.length > 0 && (
                 <ListGroup>
                   {convidados.map((convidado, index) => (
                     <ListGroupItem key={index} className="d-flex justify-content-between">
-                      {convidado}
+                      {convidado} {/* Aqui você pode exibir o nome do convidado, dependendo de como você armazena isso */}
                       <Button color="danger" size="sm" onClick={() => removerConvidado(convidado)}>
                         <FontAwesomeIcon icon="trash" />
                       </Button>
