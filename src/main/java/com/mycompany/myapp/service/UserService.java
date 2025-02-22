@@ -293,4 +293,17 @@ public class UserService {
     public List<String> getAuthorities() {
         return authorityRepository.findAll().stream().map(Authority::getName).toList();
     }
+
+    @Transactional
+    public void resetPasswordToDefault(String login) {
+        userRepository
+            .findOneByLogin(login)
+            .ifPresent(user -> {
+                // Codificando a nova senha padrão
+                String encryptedPassword = passwordEncoder.encode("senha123");
+                user.setPassword(encryptedPassword);
+                userRepository.save(user); // Salvando o usuário com a nova senha
+                LOG.debug("Senha resetada para o usuário: {}", user.getLogin());
+            });
+    }
 }

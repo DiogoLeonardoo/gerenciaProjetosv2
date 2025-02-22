@@ -209,4 +209,14 @@ public class UserResource {
             .headers(HeaderUtil.createAlert(applicationName, "A user is deleted with identifier " + login, login))
             .build();
     }
+
+    @PutMapping("/users/{login}/reset-password")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    public ResponseEntity<Void> resetPassword(@PathVariable("login") @Pattern(regexp = Constants.LOGIN_REGEX) String login) {
+        LOG.debug("REST request to reset password for User: {}", login);
+        userService.resetPasswordToDefault(login); // Chama o serviço para resetar a senha
+        return ResponseEntity.noContent()
+            .headers(HeaderUtil.createAlert(applicationName, "A senha foi resetada para o usuário com login " + login, login))
+            .build();
+    }
 }

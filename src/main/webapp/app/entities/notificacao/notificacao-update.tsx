@@ -94,7 +94,16 @@ export const NotificacaoUpdate = () => {
   // Função para adicionar um novo convidado (a partir de um select)
   const adicionarConvidado = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedUsers = Array.from(e.target.selectedOptions, option => option.value);
-    setConvidados([...convidados, ...selectedUsers]);
+
+    // Evita adicionar usuários já presentes na lista
+    const novosConvidados = selectedUsers.filter(user => !convidados.includes(user));
+
+    if (novosConvidados.length > 0) {
+      setConvidados([...convidados, ...novosConvidados]);
+    }
+
+    // Resetando a seleção para evitar confusão visual
+    e.target.selectedIndex = -1;
   };
 
   // Função para remover um convidado
